@@ -45,7 +45,9 @@ jobs:
         run: |
           # 安装Source Han Serif字体
           mkdir -p ~/.local/share/fonts
-          curl -L -o ~/.local/share/fonts/SourceHanSerif.zip "https://mirrors.tuna.tsinghua.edu.cn/adobe-fonts/source-han-serif/SubsetOTF/SourceHanSerifCN.zip"
+          curl -L -o ~/.local/share/fonts/
+          SOURCE_LATEST_RELEASE=$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+          curl -L -o ~/.local/share/fonts/SourceHanSerif.zip "https://github.com/adobe-fonts/source-han-serif/releases/download/${MAPLE_LATEST_RELEASE}/09_SourceHanSerifSC.zip"
           cd ~/.local/share/fonts && unzip SourceHanSerif.zip
 
           # 安装Maple Mono字体（获取最新版本）

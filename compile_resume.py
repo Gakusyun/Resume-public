@@ -31,7 +31,6 @@ def get_git_commit_hash():
 
 
 def create_footer_content(typst_version, commit_hash):
-    """创建页脚内容"""
     # 获取东八区时间
     utc_time = datetime.now(timezone.utc)
     beijing_time = utc_time + timedelta(hours=8)
