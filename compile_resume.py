@@ -8,7 +8,6 @@ import toml
 
 
 def get_typst_version():
-    """获取Typst版本信息"""
     try:
         result = subprocess.run(['typst', '--version'], capture_output=True, text=True)
         if result.returncode == 0:

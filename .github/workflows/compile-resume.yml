@@ -58,6 +58,7 @@ jobs:
 
       - name: Compile resume
         run: |
+          pip install toml
           python compile_resume.py
 
       - name: Upload PDF as artifact
