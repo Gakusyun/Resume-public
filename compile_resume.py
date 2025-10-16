@@ -119,7 +119,7 @@ def main():
     """主函数"""
     # 读取config.toml文件
     config = toml.load("config.toml")
-    resume_file = config['resume']['file']
+    resume_file = config['resume']['resume_file']
     success = compile_resume(resume_file)
     sys.exit(0 if success else 1)
 
