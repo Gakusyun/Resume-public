@@ -17,8 +17,6 @@ def get_git_commit_hash():
     result = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
     return result.stdout.strip()[:8]  # 取前8位
         
-
-
 def create_footer_content(typst_version, commit_hash):
     # 获取东八区时间
     utc_time = datetime.now(timezone.utc)
