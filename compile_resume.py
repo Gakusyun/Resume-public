@@ -8,26 +8,15 @@ import toml
 
 
 def get_typst_version():
-    try:
-        result = subprocess.run(['typst', '--version'], capture_output=True, text=True)
-        if result.returncode == 0:
-            return result.stdout.strip()
-        else:
-            return "typst version unknown"
-    except FileNotFoundError:
-        return "typst not found"
+    result = subprocess.run(['typst', '--version'], capture_output=True, text=True)
+    return result.stdout.strip()
 
 
 def get_git_commit_hash():
     """获取当前Git commit hash"""
-    try:
-        result = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
-        if result.returncode == 0:
-            return result.stdout.strip()[:8]  # 取前8位
-        else:
-            return "unknown"
-    except FileNotFoundError:
-        return "git not found"
+    result = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
+    return result.stdout.strip()[:8]  # 取前8位
+        
 
 
 def create_footer_content(typst_version, commit_hash):
