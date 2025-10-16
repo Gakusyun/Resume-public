@@ -1,0 +1,108 @@
+name: Compile and Release Resume
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "**.typ"
+      - "img/**"
+      - "style/**"
+      - "compile_resume.py"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "**.typ"
+      - "img/**"
+      - "style/**"
+      - "compile_resume.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取完整历史记录以获取commit hash
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Typst
+        run: |
+          curl -L https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ
+          sudo mv typst-x86_64-unknown-linux-musl/typst /usr/local/bin/
+          typst --version
+
+      - name: Install fonts
+        run: |
+          # 安装Source Han Serif字体
+          mkdir -p ~/.local/share/fonts
+          curl -L -o ~/.local/share/fonts/SourceHanSerif.zip "https://mirrors.tuna.tsinghua.edu.cn/adobe-fonts/source-han-serif/SubsetOTF/SourceHanSerifCN.zip"
+          cd ~/.local/share/fonts && unzip SourceHanSerif.zip
+
+          # 安装Maple Mono字体（获取最新版本）
+          MAPLE_LATEST_RELEASE=$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+          curl -L -o ~/.local/share/fonts/MapleMono.zip "https://github.com/subframe7536/maple-font/releases/download/${MAPLE_LATEST_RELEASE}/MapleMono-TTF.zip"
+          cd ~/.local/share/fonts && unzip -o MapleMono.zip
+
+          # 更新字体缓存
+          fc-cache -fv
+
+      - name: Compile resume
+        run: |
+          python compile_resume.py
+
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-pdf
+          path: resume-zh.pdf
+          retention-days: 30
+
+      - name: Create Release
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 获取commit信息
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          COMMIT_DATE=$(git log -1 --format=%cd --date=short)
+          COMMIT_MESSAGE=$(git log -1 --format=%s)
+
+          # 创建release标签
+          TAG_NAME="resume-${COMMIT_DATE}-${COMMIT_HASH}"
+
+          # 检查标签是否已存在
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Tag $TAG_NAME already exists, skipping release creation"
+            exit 0
+          fi
+
+          # 创建release
+          cat << EOF > release_notes.txt
+
+          **提交信息:**
+          - Commit: $COMMIT_HASH
+          - 日期: $COMMIT_DATE
+          - 消息: $COMMIT_MESSAGE
+
+          **编译信息:**
+          - Typst版本: $(typst version)
+          - 编译时间: (UTC+8)$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S %Z')
+
+          此版本由GitHub Actions自动编译和发布。
+          EOF
+                  
+          gh release create "$TAG_NAME" \
+            resume-zh.pdf \
+            --title "Resume - $COMMIT_DATE" \
+            --notes-file release_notes.txt \
+            --latest

@@ -1,0 +1,10 @@
+# 工作日志
+GAKUKO_WORK_LOG.MD
+AGENTS.md
+
+# Typst 产物
+*.pdf
+
+# 临时文件
+*.typ.tmp
+*.aux
