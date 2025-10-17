@@ -31,8 +31,8 @@ def create_footer_content(typst_version, commit_hash):
     font: "Maple Mono",
     size: 8pt,
   )
+  Compile time(UTC+8): {current_time} \\
   Compiled by {typst_version} \\
-  compile date(UTC+8): {current_time} \\
   git commit hash: {commit_hash}
 ]'''
     
