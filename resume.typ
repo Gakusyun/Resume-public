@@ -51,7 +51,7 @@
   name: "热干面",
   role: "组员",
   dates: "2023年6月",
-  url: "github/Gakusyun/resume-public",
+  url: "github.com/Gakusyun/Resume-public",
 )
 - 使用芝麻酱、碱水面、卤水、芝麻酱技术实现
 
@@ -59,7 +59,7 @@
   name: "红油热干面",
   role: "组长",
   dates: "2023年8月",
-  url: "github/Gakusyun/resume-public",
+  url: "github.com/Gakusyun/Resume-public",
 )
 - 使用鱼腥草、黄豆、碱水面、花生酱、红油技术实现
 
