@@ -98,7 +98,7 @@ jobs:
 
           **编译信息:**
           - Typst版本: $(typst --version)
-          - 编译时间: (UTC+8)$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S %Z')
+          - 编译时间: $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S %Z')
 
           此版本由GitHub Actions自动编译和发布。
           EOF

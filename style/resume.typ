@@ -15,7 +15,7 @@
   orcid: "",
   accent-color: "#26428b",
   // font: "MiSans",
-  font: "Source Han Serif",
+  font: ((name: "New Computer Modern", covers: "latin-in-cjk"), "Source Han Serif"),
   paper: "a4",
   author-font-size: 25pt,
   font-size: 11pt,
@@ -31,6 +31,7 @@
     font: font,
     size: font-size,
     lang: "zh",
+    region: "cn",
     // Disable ligatures so ATS systems do not get confused when parsing fonts.
     ligatures: false,
   )
@@ -40,6 +41,7 @@
     margin: 0.6in,
     paper: paper,
   )
+  set underline(stroke: 0.5pt, offset: 1.5pt)
 
   // Link styles
   show link: underline
